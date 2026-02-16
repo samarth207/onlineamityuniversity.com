@@ -29,6 +29,30 @@ AddDefaultCharset UTF-8
 # Enable URL Rewriting
 RewriteEngine On
 
+# ===== Blog URL Routing =====
+# Blog admin panel
+RewriteRule ^blog/admin$ blog/admin.php [L]
+
+# Blog login page
+RewriteRule ^blog/login$ blog/login.php [L]
+
+# Blog API endpoint
+RewriteRule ^blog/api$ blog/blog-api.php [QSA,L]
+
+# Blog listing page
+RewriteRule ^blog/?$ blog.php [L]
+
+# Blog category page
+RewriteRule ^blog/category/([^/]+)$ blog.php?category=$1 [QSA,L]
+
+# Blog search
+RewriteRule ^blog/search$ blog.php?search= [QSA,L]
+
+# Blog single post (must be after admin/login/api rules)
+RewriteRule ^blog/([a-zA-Z0-9\-]+)$ blog/index.php?slug=$1 [QSA,L]
+
+# ===== End Blog URL Routing =====
+
 # Remove .html extension from URLs
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
