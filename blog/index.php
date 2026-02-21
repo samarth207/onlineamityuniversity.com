@@ -460,11 +460,30 @@ $metaDesc = $post ? ($post['meta_description'] ?: $post['excerpt']) : '';
                     <?php endif; ?>
 
                     <!-- CTA -->
+                    <?php
+                    // Determine CTA content - use post-specific CTA if set, else default
+                    $ctaWidget = ['title' => 'Start Your Journey', 'text' => 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs', 'button_text' => 'Apply Now', 'button_url' => '/'];
+                    $showCta = true;
+                    if (!empty($post['cta_data'])) {
+                        $ctaFromPost = is_string($post['cta_data']) ? json_decode($post['cta_data'], true) : $post['cta_data'];
+                        if ($ctaFromPost) {
+                            if (isset($ctaFromPost['enabled']) && $ctaFromPost['enabled'] === false) {
+                                $showCta = false;
+                            } else {
+                                if (!empty($ctaFromPost['title'])) $ctaWidget['title'] = $ctaFromPost['title'];
+                                if (!empty($ctaFromPost['text'])) $ctaWidget['text'] = $ctaFromPost['text'];
+                                if (!empty($ctaFromPost['button_text'])) $ctaWidget['button_text'] = $ctaFromPost['button_text'];
+                                if (!empty($ctaFromPost['button_url'])) $ctaWidget['button_url'] = $ctaFromPost['button_url'];
+                            }
+                        }
+                    }
+                    if ($showCta): ?>
                     <div class="sidebar-widget cta-widget">
-                        <h3>Start Your Journey</h3>
-                        <p>Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs</p>
-                        <a href="/" class="btn btn-primary">Apply Now</a>
+                        <h3><?php echo htmlspecialchars($ctaWidget['title']); ?></h3>
+                        <p><?php echo htmlspecialchars($ctaWidget['text']); ?></p>
+                        <a href="<?php echo htmlspecialchars($ctaWidget['button_url']); ?>" class="btn btn-primary"><?php echo htmlspecialchars($ctaWidget['button_text']); ?></a>
                     </div>
+                    <?php endif; ?>
                 </aside>
             </div>
         </div>

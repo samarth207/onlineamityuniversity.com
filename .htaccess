@@ -62,6 +62,16 @@ RewriteRule ^([^\.]+)$ $1.html [NC,L]
 RewriteCond %{THE_REQUEST} ^GET\ /([^\ ]+)\.html
 RewriteRule (.*)\.html$ /$1 [R=301,L]
 
+# Redirect .php URLs to clean URLs (public-facing pages only)
+RewriteCond %{THE_REQUEST} ^GET\ /blog\.php[\ ?]
+RewriteRule ^blog\.php$ /blog [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^GET\ /blog/admin\.php[\ ?]
+RewriteRule ^blog/admin\.php$ /blog/admin [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^GET\ /blog/login\.php[\ ?]
+RewriteRule ^blog/login\.php$ /blog/login [R=301,L]
+
 # Remove trailing slash if not a directory
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$

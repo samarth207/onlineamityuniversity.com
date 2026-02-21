@@ -367,6 +367,40 @@ $adminUser = $_SESSION[BLOG_ADMIN_SESSION_NAME];
                             </div>
                         </div>
                     </div>
+
+                    <!-- CTA Block -->
+                    <div class="editor-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bullhorn"></i> Sidebar CTA Block</h3>
+                            <span class="card-toggle"><i class="fas fa-chevron-up"></i></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label class="checkbox-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                    <input type="checkbox" id="ctaEnabled" checked onchange="toggleCtaFields(this.checked)">
+                                    <span>Show CTA in this post's sidebar</span>
+                                </label>
+                            </div>
+                            <div id="ctaFields">
+                                <div class="form-group">
+                                    <label>CTA Title</label>
+                                    <input type="text" id="ctaTitle" placeholder="e.g. Start Your Journey" value="Start Your Journey">
+                                </div>
+                                <div class="form-group">
+                                    <label>CTA Text</label>
+                                    <textarea id="ctaText" rows="2" placeholder="Promotional message">Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Button Text</label>
+                                    <input type="text" id="ctaButtonText" placeholder="Apply Now" value="Apply Now">
+                                </div>
+                                <div class="form-group">
+                                    <label>Button URL</label>
+                                    <input type="text" id="ctaButtonUrl" placeholder="/" value="/">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </section>

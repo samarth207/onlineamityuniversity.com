@@ -280,6 +280,24 @@ async function editPost(id) {
     currentTags = (post.tags || []).map(t => t.name);
     renderTags();
     
+    // CTA
+    const ctaEnabled = document.getElementById('ctaEnabled');
+    if (post.cta_data) {
+        const cta = typeof post.cta_data === 'string' ? JSON.parse(post.cta_data) : post.cta_data;
+        ctaEnabled.checked = cta.enabled !== false;
+        document.getElementById('ctaTitle').value = cta.title || 'Start Your Journey';
+        document.getElementById('ctaText').value = cta.text || 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
+        document.getElementById('ctaButtonText').value = cta.button_text || 'Apply Now';
+        document.getElementById('ctaButtonUrl').value = cta.button_url || '/';
+    } else {
+        ctaEnabled.checked = true;
+        document.getElementById('ctaTitle').value = 'Start Your Journey';
+        document.getElementById('ctaText').value = 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
+        document.getElementById('ctaButtonText').value = 'Apply Now';
+        document.getElementById('ctaButtonUrl').value = '/';
+    }
+    toggleCtaFields(ctaEnabled.checked);
+    
     // Trigger counters
     updateCharCounters();
     updateSEOPreview();
@@ -342,8 +360,21 @@ function resetPostForm() {
     currentTags = [];
     renderTags();
     
+    // Reset CTA
+    document.getElementById('ctaEnabled').checked = true;
+    document.getElementById('ctaTitle').value = 'Start Your Journey';
+    document.getElementById('ctaText').value = 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
+    document.getElementById('ctaButtonText').value = 'Apply Now';
+    document.getElementById('ctaButtonUrl').value = '/';
+    toggleCtaFields(true);
+    
     updateCharCounters();
     updateSEOPreview();
+}
+
+function toggleCtaFields(enabled) {
+    const fields = document.getElementById('ctaFields');
+    if (fields) fields.style.display = enabled ? 'block' : 'none';
 }
 
 function collectPostData(status) {
@@ -381,7 +412,14 @@ function collectPostData(status) {
         publish_date: publishDatetime,
         scheduled_date: status === 'scheduled' ? document.getElementById('scheduledDate').value.replace('T', ' ') + ':00' : null,
         category_ids: categoryIds,
-        tags: currentTags
+        tags: currentTags,
+        cta_data: {
+            enabled: document.getElementById('ctaEnabled').checked,
+            title: document.getElementById('ctaTitle').value.trim(),
+            text: document.getElementById('ctaText').value.trim(),
+            button_text: document.getElementById('ctaButtonText').value.trim(),
+            button_url: document.getElementById('ctaButtonUrl').value.trim()
+        }
     };
 }
 

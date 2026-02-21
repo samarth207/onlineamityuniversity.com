@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `blog_posts` (
   `status` enum('draft','pending','published','scheduled') NOT NULL DEFAULT 'draft',
   `publish_date` datetime DEFAULT NULL,
   `scheduled_date` datetime DEFAULT NULL,
+  `cta_data` text DEFAULT NULL COMMENT 'JSON: {enabled, title, text, button_text, button_url}',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `views` int(11) NOT NULL DEFAULT 0,
@@ -126,3 +127,5 @@ CREATE TABLE IF NOT EXISTS `blog_admin_users` (
   UNIQUE KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Add cta_data column to existing databases (safe to run even if table already exists)
+ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `cta_data` text DEFAULT NULL COMMENT 'JSON: {enabled, title, text, button_text, button_url}' AFTER `scheduled_date`;

@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
             mobileToggle.classList.toggle('active');
+            document.body.classList.toggle('nav-open');
             
             // Animate hamburger icon (fallback for inline styles)
             const isActive = navMenu.classList.contains('active');
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             link.addEventListener('click', function() {
                 navMenu.classList.remove('active');
                 mobileToggle.classList.remove('active');
+                document.body.classList.remove('nav-open');
                 const spans = mobileToggle.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';
@@ -169,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
                 navMenu.classList.remove('active');
                 mobileToggle.classList.remove('active');
+                document.body.classList.remove('nav-open');
                 const spans = mobileToggle.querySelectorAll('span');
                 spans[0].style.transform = 'none';
                 spans[1].style.opacity = '1';

@@ -41,11 +41,12 @@
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 12px;
+    color: #ffffff;
 }
 
 .blog-hero-desc {
     font-size: 1.05rem;
-    opacity: 0.85;
+    color: rgba(255, 255, 255, 0.92);
     max-width: 600px;
 }
 
@@ -413,24 +414,24 @@
 /* CTA Widget */
 .cta-widget {
     background: linear-gradient(135deg, #0a2e73, #1e40af) !important;
-    color: white;
+    color: #ffffff !important;
     text-align: center;
 }
 
 .cta-widget h3 {
-    color: white;
+    color: #ffffff !important;
     border-bottom-color: rgba(255,255,255,0.3);
 }
 
 .cta-widget p {
-    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.92) !important;
     margin-bottom: 16px;
     font-size: 0.9rem;
 }
 
 .cta-widget .btn {
     background: #ffcc00;
-    color: #0a2e73;
+    color: #0a2e73 !important;
     font-weight: 700;
     padding: 12px 28px;
     border-radius: 8px;

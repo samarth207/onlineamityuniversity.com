@@ -1459,8 +1459,12 @@ section[style*="bba-hero-bg"] > div.container > div[style*="grid"] > div[style*=
     font-size: 0.95rem !important;
   }
   
-  /* Menu Overlay */
-  .nav-menu.active::before {
+  /* Menu Overlay - applied to body to avoid stacking context issues */
+  body.nav-open {
+    overflow: hidden;
+  }
+
+  body.nav-open::after {
     content: '';
     position: fixed;
     top: 0;
@@ -1468,7 +1472,7 @@ section[style*="bba-hero-bg"] > div.container > div[style*="grid"] > div[style*=
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+    z-index: 998;
   }
   
   /* ================================

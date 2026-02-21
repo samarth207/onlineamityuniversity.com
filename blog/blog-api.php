@@ -540,6 +540,7 @@ function adminSavePost($conn) {
     $status = $input['status'];
     $publishDate = null;
     $scheduledDate = null;
+    $ctaData = isset($input['cta_data']) ? json_encode($input['cta_data']) : null;
     
     if ($status === 'published') {
         $publishDate = isset($input['publish_date']) && !empty($input['publish_date']) 
@@ -570,7 +571,8 @@ function adminSavePost($conn) {
                     focus_keyword = :focus_keyword, primary_keyword = :primary_keyword, excerpt = :excerpt,
                     content = :content, feature_image = :feature_image, feature_image_alt = :feature_image_alt,
                     feature_image_title = :feature_image_title, author_id = :author_id, status = :status,
-                    publish_date = :publish_date, scheduled_date = :scheduled_date, updated_at = NOW()
+                    publish_date = :publish_date, scheduled_date = :scheduled_date, cta_data = :cta_data,
+                    updated_at = NOW()
                 WHERE id = :id
             ");
             $stmt->execute([
@@ -580,17 +582,17 @@ function adminSavePost($conn) {
                 ':feature_image' => $featureImage, ':feature_image_alt' => $featureImageAlt,
                 ':feature_image_title' => $featureImageTitle, ':author_id' => $authorId,
                 ':status' => $status, ':publish_date' => $publishDate, ':scheduled_date' => $scheduledDate,
-                ':id' => $id
+                ':cta_data' => $ctaData, ':id' => $id
             ]);
         } else {
             // Create new post
             $stmt = $conn->prepare("
                 INSERT INTO blog_posts (title, slug, meta_title, meta_description, focus_keyword, primary_keyword,
                     excerpt, content, feature_image, feature_image_alt, feature_image_title, author_id, status,
-                    publish_date, scheduled_date, created_at, updated_at)
+                    publish_date, scheduled_date, cta_data, created_at, updated_at)
                 VALUES (:title, :slug, :meta_title, :meta_description, :focus_keyword, :primary_keyword,
                     :excerpt, :content, :feature_image, :feature_image_alt, :feature_image_title, :author_id,
-                    :status, :publish_date, :scheduled_date, NOW(), NOW())
+                    :status, :publish_date, :scheduled_date, :cta_data, NOW(), NOW())
             ");
             $stmt->execute([
                 ':title' => $title, ':slug' => $slug, ':meta_title' => $metaTitle,
@@ -598,7 +600,8 @@ function adminSavePost($conn) {
                 ':primary_keyword' => $primaryKeyword, ':excerpt' => $excerpt, ':content' => $content,
                 ':feature_image' => $featureImage, ':feature_image_alt' => $featureImageAlt,
                 ':feature_image_title' => $featureImageTitle, ':author_id' => $authorId,
-                ':status' => $status, ':publish_date' => $publishDate, ':scheduled_date' => $scheduledDate
+                ':status' => $status, ':publish_date' => $publishDate, ':scheduled_date' => $scheduledDate,
+                ':cta_data' => $ctaData
             ]);
             $id = $conn->lastInsertId();
         }
