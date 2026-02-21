@@ -453,13 +453,15 @@
     color: #ffffff;
 }
 
-.inline-cta-block h3 {
+.inline-cta-block h3,
+.inline-cta-block .cta-inline-title {
     color: #ffffff !important;
     font-size: 1.3rem;
     font-weight: 700;
     margin: 0 0 10px;
     border: none !important;
     padding: 0 !important;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .inline-cta-block p {

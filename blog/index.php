@@ -45,40 +45,38 @@ if ($conn) {
     // Increment views
     $conn->prepare("UPDATE blog_posts SET views = views + 1 WHERE id = ?")->execute([$post['id']]);
     
-    // Add heading IDs for TOC
-    $post['content'] = addHeadingIds($post['content']);
-    $toc = extractHeadings($post['content']);
-    
-    // Reading time
-    $readingTime = getReadingTime($post['content']);
-    
     // Build CTA widget data (used for both sidebar and inline [cta] shortcode)
     $ctaWidget = ['title' => 'Start Your Journey', 'text' => 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs', 'button_text' => 'Apply Now', 'button_url' => '/'];
     $showSidebarCta = true; // sidebar flag only
     if (!empty($post['cta_data'])) {
         $ctaFromPost = is_string($post['cta_data']) ? json_decode($post['cta_data'], true) : $post['cta_data'];
         if ($ctaFromPost) {
-            // Always apply custom values so both sidebar & inline use them
             if (!empty($ctaFromPost['title'])) $ctaWidget['title'] = $ctaFromPost['title'];
             if (!empty($ctaFromPost['text'])) $ctaWidget['text'] = $ctaFromPost['text'];
             if (!empty($ctaFromPost['button_text'])) $ctaWidget['button_text'] = $ctaFromPost['button_text'];
             if (!empty($ctaFromPost['button_url'])) $ctaWidget['button_url'] = $ctaFromPost['button_url'];
-            // enabled flag only hides the sidebar widget, NOT inline [cta] shortcodes
             if (isset($ctaFromPost['enabled']) && $ctaFromPost['enabled'] === false) {
                 $showSidebarCta = false;
             }
         }
     }
-    // Process [cta] shortcode in content — always renders regardless of sidebar toggle
+    // Process [cta] shortcode BEFORE TOC extraction so it never appears as a heading
     if (strpos($post['content'], '[cta]') !== false) {
         $inlineCtaHtml = '<div class="inline-cta-block">'
-            . '<h3>' . htmlspecialchars($ctaWidget['title']) . '</h3>'
+            . '<p class="cta-inline-title">' . htmlspecialchars($ctaWidget['title']) . '</p>'
             . '<p>' . htmlspecialchars($ctaWidget['text']) . '</p>'
             . '<a href="' . htmlspecialchars($ctaWidget['button_url']) . '" class="btn btn-primary">'
             . htmlspecialchars($ctaWidget['button_text']) . '</a>'
             . '</div>';
         $post['content'] = str_replace('[cta]', $inlineCtaHtml, $post['content']);
     }
+
+    // Add heading IDs for TOC (after [cta] replacement so CTA content is excluded)
+    $post['content'] = addHeadingIds($post['content']);
+    $toc = extractHeadings($post['content']);
+    
+    // Reading time
+    $readingTime = getReadingTime($post['content']);
     
     // Categories
     $catStmt = $conn->prepare("SELECT c.id, c.name, c.slug FROM blog_categories c JOIN blog_post_categories pc ON c.id=pc.category_id WHERE pc.post_id=?");
