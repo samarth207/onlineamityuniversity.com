@@ -639,6 +639,9 @@ body {
     border: 2px solid var(--admin-border);
     border-bottom: none;
     border-radius: 8px 8px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .toolbar-group {
@@ -709,7 +712,7 @@ body {
 .content-editor img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; }
 .content-editor table { width: 100%; border-collapse: collapse; margin: 16px 0; }
 .content-editor table th, .content-editor table td { border: 1px solid var(--admin-border); padding: 10px 14px; text-align: left; }
-.content-editor table th { background: #f8fafc; font-weight: 600; }
+.content-editor table th { background: #0a2e73; color: #ffffff; font-weight: 600; }
 .content-editor figure { margin: 16px 0; }
 .content-editor figcaption { text-align: center; font-size: 0.85rem; color: var(--admin-text-light); margin-top: 6px; }
 

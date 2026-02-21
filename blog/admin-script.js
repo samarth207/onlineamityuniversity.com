@@ -676,28 +676,33 @@ function insertTable() {
     closeTableModal();
 }
 
-// FAQ Block
+// FAQ Block — adds one FAQ item at a time
 function insertFaqBlock() {
-    const html = `
-        <div class="faq-block">
-            <h3>Frequently Asked Questions</h3>
-            <div class="faq-item">
-                <h4>Question 1?</h4>
-                <p>Answer to question 1.</p>
+    const editor = document.getElementById('contentEditor');
+    // Check if a faq-block already exists in the content
+    let faqBlock = editor.querySelector('.faq-block');
+    if (faqBlock) {
+        // Append a new faq-item to existing block
+        const count = faqBlock.querySelectorAll('.faq-item').length + 1;
+        const newItem = document.createElement('div');
+        newItem.className = 'faq-item';
+        newItem.innerHTML = `<h4>Question ${count}?</h4><p>Answer to question ${count}.</p>`;
+        faqBlock.appendChild(newItem);
+    } else {
+        // Create new faq-block with one item
+        const html = `
+            <div class="faq-block">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-item">
+                    <h4>Question 1?</h4>
+                    <p>Answer to question 1.</p>
+                </div>
             </div>
-            <div class="faq-item">
-                <h4>Question 2?</h4>
-                <p>Answer to question 2.</p>
-            </div>
-            <div class="faq-item">
-                <h4>Question 3?</h4>
-                <p>Answer to question 3.</p>
-            </div>
-        </div>
-        <p><br></p>
-    `;
-    document.getElementById('contentEditor').focus();
-    document.execCommand('insertHTML', false, html);
+            <p><br></p>
+        `;
+        editor.focus();
+        document.execCommand('insertHTML', false, html);
+    }
 }
 
 // =====================================================
