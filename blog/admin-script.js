@@ -372,6 +372,34 @@ function resetPostForm() {
     updateSEOPreview();
 }
 
+function insertCtaShortcode() {
+    const editor = document.getElementById('contentEditor');
+    if (!editor) return;
+    editor.focus();
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && editor.contains(selection.getRangeAt(0).commonAncestorContainer)) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const textNode = document.createTextNode('[cta]');
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else {
+        // Cursor not in editor — append at end
+        editor.focus();
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('insertText', false, '[cta]');
+    }
+    editor.dispatchEvent(new Event('input'));
+}
+
 function toggleCtaFields(enabled) {
     const fields = document.getElementById('ctaFields');
     if (fields) fields.style.display = enabled ? 'block' : 'none';

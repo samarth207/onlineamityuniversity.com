@@ -444,6 +444,45 @@
     transform: scale(1.05);
 }
 
+/* Inline CTA block ([cta] shortcode in post content) */
+.inline-cta-block {
+    background: linear-gradient(135deg, #0a2e73 0%, #1a4db5 100%);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 32px 0;
+    text-align: center;
+    color: #ffffff;
+}
+
+.inline-cta-block h3 {
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 10px;
+    border: none;
+}
+
+.inline-cta-block p {
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 20px;
+    font-size: 0.95rem;
+}
+
+.inline-cta-block .btn {
+    background: #ffcc00;
+    color: #0a2e73;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 8px;
+    display: inline-block;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.inline-cta-block .btn:hover {
+    transform: scale(1.05);
+}
+
 /* ==========================================
    SINGLE BLOG POST
    ========================================== */

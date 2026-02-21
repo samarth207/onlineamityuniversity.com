@@ -371,14 +371,20 @@ $adminUser = $_SESSION[BLOG_ADMIN_SESSION_NAME];
                     <!-- CTA Block -->
                     <div class="editor-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-bullhorn"></i> Sidebar CTA Block</h3>
+                            <h3><i class="fas fa-bullhorn"></i> CTA Block</h3>
                             <span class="card-toggle"><i class="fas fa-chevron-up"></i></span>
                         </div>
                         <div class="card-body">
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <button type="button" onclick="insertCtaShortcode()" style="width:100%;padding:8px 14px;background:#0a2e73;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:6px;">
+                                    <i class="fas fa-plus-circle"></i> Insert [cta] at Cursor in Content
+                                </button>
+                                <small style="display:block;margin-top:5px;color:#6b7280;font-size:0.78rem;">Inserts a CTA block inline wherever your cursor is in the editor. Configure the CTA fields below.</small>
+                            </div>
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label class="checkbox-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
                                     <input type="checkbox" id="ctaEnabled" checked onchange="toggleCtaFields(this.checked)">
-                                    <span>Show CTA in this post's sidebar</span>
+                                    <span>Also show CTA in sidebar</span>
                                 </label>
                             </div>
                             <div id="ctaFields">
