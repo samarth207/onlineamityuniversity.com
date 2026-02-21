@@ -837,7 +837,7 @@
 
 .post-content table th {
     background: #0a2e73;
-    color: white;
+    color: #ffffff !important;
     font-weight: 600;
 }
 
