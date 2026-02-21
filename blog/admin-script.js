@@ -296,7 +296,6 @@ async function editPost(id) {
         document.getElementById('ctaButtonText').value = 'Apply Now';
         document.getElementById('ctaButtonUrl').value = '/';
     }
-    toggleCtaFields(ctaEnabled.checked);
     
     // Trigger counters
     updateCharCounters();
@@ -366,7 +365,6 @@ function resetPostForm() {
     document.getElementById('ctaText').value = 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
     document.getElementById('ctaButtonText').value = 'Apply Now';
     document.getElementById('ctaButtonUrl').value = '/';
-    toggleCtaFields(true);
     
     updateCharCounters();
     updateSEOPreview();

@@ -383,7 +383,7 @@ $adminUser = $_SESSION[BLOG_ADMIN_SESSION_NAME];
                             </div>
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label class="checkbox-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-                                    <input type="checkbox" id="ctaEnabled" checked onchange="toggleCtaFields(this.checked)">
+                                    <input type="checkbox" id="ctaEnabled" checked>
                                     <span>Also show CTA in sidebar</span>
                                 </label>
                             </div>

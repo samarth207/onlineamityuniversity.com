@@ -420,7 +420,8 @@
 
 .cta-widget h3 {
     color: #ffffff !important;
-    border-bottom-color: rgba(255,255,255,0.3);
+    border-bottom-color: rgba(255,255,255,0.3) !important;
+    padding: 0 !important;
 }
 
 .cta-widget p {
@@ -455,11 +456,12 @@
 }
 
 .inline-cta-block h3 {
-    color: #ffffff;
+    color: #ffffff !important;
     font-size: 1.3rem;
     font-weight: 700;
     margin: 0 0 10px;
-    border: none;
+    border: none !important;
+    padding: 0 !important;
 }
 
 .inline-cta-block p {
