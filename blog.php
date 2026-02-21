@@ -164,12 +164,17 @@ $totalPages = ceil($total / $limit);
             <a href="/" class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
                 <img src="assets/images/amity-logo.svg" alt="Amity Online" style="height: 50px; width: auto;">
             </a>
+
+            <!-- Mobile Enquire Button (visible only on mobile) -->
+            <a href="/" class="mobile-enquire-btn" style="display: none; background: white; color: var(--navy-blue); border: 2px solid var(--navy-blue); padding: 8px 20px; border-radius: 25px; font-weight: 600; font-size: 0.9rem;">Enquire Now</a>
+
             <ul class="nav-menu" id="navMenu">
-                <li><a href="programs" class="nav-link">Programs</a></li>
-                <li><a href="scholarship" class="nav-link">Scholarships</a></li>
-                <li><a href="blog" class="nav-link active">Blog</a></li>
-                <li><a href="about" class="nav-link">About</a></li>
+                <li><a href="/programs" class="nav-link" style="display: flex; align-items: center; gap: 0.3rem;">Programs <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a></li>
+                <li><a href="/scholarship" class="nav-link">Scholarships</a></li>
+                <li><a href="/#career-services" class="nav-link">Career Services</a></li>
+                <li><a href="/blog" class="nav-link active">Blog</a></li>
                 <div class="nav-cta">
+                    <a href="/" class="btn" style="background: white; color: var(--navy-blue); border: 2px solid var(--navy-blue);">Enquire Now</a>
                     <a href="/" class="btn btn-primary">Apply Now</a>
                 </div>
             </ul>

@@ -54,22 +54,23 @@ if ($conn) {
     
     // Build CTA widget data (used for both sidebar and inline [cta] shortcode)
     $ctaWidget = ['title' => 'Start Your Journey', 'text' => 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs', 'button_text' => 'Apply Now', 'button_url' => '/'];
-    $showCta = true;
+    $showSidebarCta = true; // sidebar flag only
     if (!empty($post['cta_data'])) {
         $ctaFromPost = is_string($post['cta_data']) ? json_decode($post['cta_data'], true) : $post['cta_data'];
         if ($ctaFromPost) {
+            // Always apply custom values so both sidebar & inline use them
+            if (!empty($ctaFromPost['title'])) $ctaWidget['title'] = $ctaFromPost['title'];
+            if (!empty($ctaFromPost['text'])) $ctaWidget['text'] = $ctaFromPost['text'];
+            if (!empty($ctaFromPost['button_text'])) $ctaWidget['button_text'] = $ctaFromPost['button_text'];
+            if (!empty($ctaFromPost['button_url'])) $ctaWidget['button_url'] = $ctaFromPost['button_url'];
+            // enabled flag only hides the sidebar widget, NOT inline [cta] shortcodes
             if (isset($ctaFromPost['enabled']) && $ctaFromPost['enabled'] === false) {
-                $showCta = false;
-            } else {
-                if (!empty($ctaFromPost['title'])) $ctaWidget['title'] = $ctaFromPost['title'];
-                if (!empty($ctaFromPost['text'])) $ctaWidget['text'] = $ctaFromPost['text'];
-                if (!empty($ctaFromPost['button_text'])) $ctaWidget['button_text'] = $ctaFromPost['button_text'];
-                if (!empty($ctaFromPost['button_url'])) $ctaWidget['button_url'] = $ctaFromPost['button_url'];
+                $showSidebarCta = false;
             }
         }
     }
-    // Process [cta] shortcode in content
-    if ($showCta && strpos($post['content'], '[cta]') !== false) {
+    // Process [cta] shortcode in content — always renders regardless of sidebar toggle
+    if (strpos($post['content'], '[cta]') !== false) {
         $inlineCtaHtml = '<div class="inline-cta-block">'
             . '<h3>' . htmlspecialchars($ctaWidget['title']) . '</h3>'
             . '<p>' . htmlspecialchars($ctaWidget['text']) . '</p>'
@@ -247,17 +248,24 @@ $metaDesc = $post ? ($post['meta_description'] ?: $post['excerpt']) : '';
             <a href="/" class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
                 <img src="../assets/images/amity-logo.svg" alt="Amity Online" style="height: 50px; width: auto;">
             </a>
+
+            <!-- Mobile Enquire Button (visible only on mobile) -->
+            <a href="/" class="mobile-enquire-btn" style="display: none; background: white; color: var(--navy-blue); border: 2px solid var(--navy-blue); padding: 8px 20px; border-radius: 25px; font-weight: 600; font-size: 0.9rem;">Enquire Now</a>
+
             <ul class="nav-menu" id="navMenu">
-                <li><a href="/programs" class="nav-link">Programs</a></li>
+                <li><a href="/programs" class="nav-link" style="display: flex; align-items: center; gap: 0.3rem;">Programs <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></a></li>
                 <li><a href="/scholarship" class="nav-link">Scholarships</a></li>
+                <li><a href="/#career-services" class="nav-link">Career Services</a></li>
                 <li><a href="/blog" class="nav-link active">Blog</a></li>
-                <li><a href="/about" class="nav-link">About</a></li>
                 <div class="nav-cta">
+                    <a href="/" class="btn" style="background: white; color: var(--navy-blue); border: 2px solid var(--navy-blue);">Enquire Now</a>
                     <a href="/" class="btn btn-primary">Apply Now</a>
                 </div>
             </ul>
             <button class="mobile-toggle" id="mobileToggle">
-                <span></span><span></span><span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
         </nav>
     </header>
@@ -487,7 +495,7 @@ $metaDesc = $post ? ($post['meta_description'] ?: $post['excerpt']) : '';
                     <?php endif; ?>
 
                     <!-- CTA -->
-                    <?php if ($showCta): ?>
+                    <?php if ($showSidebarCta): ?>
                     <div class="sidebar-widget cta-widget">
                         <h3><?php echo htmlspecialchars($ctaWidget['title']); ?></h3>
                         <p><?php echo htmlspecialchars($ctaWidget['text']); ?></p>
