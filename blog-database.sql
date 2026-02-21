@@ -126,7 +126,3 @@ CREATE TABLE IF NOT EXISTS `blog_admin_users` (
   UNIQUE KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert default admin (password: AmityBlog@2026 - change after first login)
--- Password hash generated with password_hash('AmityBlog@2026', PASSWORD_DEFAULT)
-INSERT INTO `blog_admin_users` (`username`, `password_hash`, `name`, `email`) VALUES
-('admin', '$2y$10$YWJvdXQgYW1pdHkgb25saW5lIHVucw...placeholder', 'Admin', 'admin@onlineamityuniversity.com');
