@@ -106,7 +106,7 @@ function showSection(section) {
         case 'dashboard': loadDashboard(); break;
         case 'posts': loadPosts(); break;
         case 'new-post': 
-            if (!currentEditId) resetPostForm(); 
+            resetPostForm(); 
             break;
         case 'categories': loadCategoriesManager(); break;
         case 'authors': loadAuthorsManager(); break;

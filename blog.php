@@ -57,11 +57,11 @@ if ($conn) {
             $posts = $stmt->fetchAll();
         }
     } else {
-        // All posts
-        $countStmt = $conn->query("SELECT COUNT(*) FROM blog_posts WHERE status='published' AND publish_date<=NOW()");
+        // All posts (only those with at least one category assigned)
+        $countStmt = $conn->query("SELECT COUNT(DISTINCT p.id) FROM blog_posts p JOIN blog_post_categories pc ON p.id=pc.post_id WHERE p.status='published' AND p.publish_date<=NOW()");
         $total = $countStmt->fetchColumn();
         
-        $stmt = $conn->prepare("SELECT p.*, a.name AS author_name, a.image AS author_image FROM blog_posts p LEFT JOIN blog_authors a ON p.author_id=a.id WHERE p.status='published' AND p.publish_date<=NOW() ORDER BY p.publish_date DESC LIMIT ? OFFSET ?");
+        $stmt = $conn->prepare("SELECT DISTINCT p.*, a.name AS author_name, a.image AS author_image FROM blog_posts p LEFT JOIN blog_authors a ON p.author_id=a.id JOIN blog_post_categories pc ON p.id=pc.post_id WHERE p.status='published' AND p.publish_date<=NOW() ORDER BY p.publish_date DESC LIMIT ? OFFSET ?");
         $stmt->bindValue(1, $limit, PDO::PARAM_INT);
         $stmt->bindValue(2, $offset, PDO::PARAM_INT);
         $stmt->execute();
