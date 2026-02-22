@@ -168,6 +168,14 @@ $metaDesc = $post ? ($post['meta_description'] ?: $post['excerpt']) : '';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css?v=20260221">
     <link rel="stylesheet" href="../css/blog.css?v=20260222">
+    <style>
+        /* Force table header styles – bypasses server-side CSS cache */
+        .post-content table th {
+            background-color: #0a2e73 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+    </style>
     
     <!-- Article Schema -->
     <script type="application/ld+json">
