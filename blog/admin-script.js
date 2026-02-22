@@ -89,7 +89,7 @@ function setupEventListeners() {
 // SECTION NAVIGATION
 // =====================================================
 
-function showSection(section) {
+function showSection(section, options = {}) {
     // Update nav
     document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
         item.classList.toggle('active', item.dataset.section === section);
@@ -106,7 +106,7 @@ function showSection(section) {
         case 'dashboard': loadDashboard(); break;
         case 'posts': loadPosts(); break;
         case 'new-post': 
-            resetPostForm(); 
+            if (!options.skipReset) resetPostForm(); 
             break;
         case 'categories': loadCategoriesManager(); break;
         case 'authors': loadAuthorsManager(); break;
@@ -304,7 +304,7 @@ async function editPost(id) {
     // Trigger status change
     document.getElementById('postStatus').dispatchEvent(new Event('change'));
     
-    showSection('new-post');
+    showSection('new-post', { skipReset: true });
 }
 
 async function deletePost(id, title) {
