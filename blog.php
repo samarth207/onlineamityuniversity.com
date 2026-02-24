@@ -80,6 +80,7 @@ if ($conn) {
         $catStmt->execute([$post['id']]);
         $post['categories'] = $catStmt->fetchAll();
     }
+    unset($post); // break reference to prevent template foreach from corrupting array
     } catch (PDOException $e) {
         error_log("Blog query error: " . $e->getMessage());
         $posts = [];
