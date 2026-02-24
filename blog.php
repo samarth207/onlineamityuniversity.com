@@ -27,7 +27,7 @@ if ($conn) {
         $countStmt->execute([$searchTerm, $searchTerm, $searchTerm]);
         $total = $countStmt->fetchColumn();
         
-        $stmt = $conn->prepare("SELECT p.*, a.name AS author_name, a.image AS author_image FROM blog_posts p LEFT JOIN blog_authors a ON p.author_id=a.id WHERE p.status='published' AND p.publish_date<=NOW() AND (p.title LIKE ? OR p.content LIKE ? OR p.focus_keyword LIKE ?) ORDER BY p.publish_date DESC, p.id DESC LIMIT ? OFFSET ?")
+        $stmt = $conn->prepare("SELECT p.*, a.name AS author_name, a.image AS author_image FROM blog_posts p LEFT JOIN blog_authors a ON p.author_id=a.id WHERE p.status='published' AND p.publish_date<=NOW() AND (p.title LIKE ? OR p.content LIKE ? OR p.focus_keyword LIKE ?) ORDER BY p.publish_date DESC, p.id DESC LIMIT ? OFFSET ?");
         $stmt->bindValue(1, $searchTerm);
         $stmt->bindValue(2, $searchTerm);
         $stmt->bindValue(3, $searchTerm);
