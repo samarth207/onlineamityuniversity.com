@@ -71,9 +71,12 @@ if ($conn) {
         $post['content'] = str_replace('[cta]', $inlineCtaHtml, $post['content']);
     }
 
+<<<<<<< Updated upstream
     // Strip any inline styles from <th> elements so CSS can control styling
     $post['content'] = preg_replace('/<th(\s[^>]*?)?\s*style="[^"]*"/i', '<th$1', $post['content']);
 
+=======
+>>>>>>> Stashed changes
     // Add heading IDs for TOC (after [cta] replacement so CTA content is excluded)
     $post['content'] = addHeadingIds($post['content']);
     $toc = extractHeadings($post['content']);

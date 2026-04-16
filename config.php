@@ -8,7 +8,7 @@ date_default_timezone_set('Asia/Kolkata');
 define('DB_HOST', 'localhost'); // Usually 'localhost' on Hostinger
 define('DB_NAME', 'u261758575_onlineamityuni'); // Your database name from Hostinger
 define('DB_USER', 'u261758575_onlineamityuni'); // Your database username
-define('DB_PASS', 'm3@G$HxmAr?C'); // Your database password
+define('DB_PASS', 's8jlXp3*Le'); // Your database password
 
 // Fast2SMS API Configuration
 define('FAST2SMS_API_KEY', '6wn0ySsBPdpTzVcgrx5E9vlA48IUJkNMuhD2R1XGtiqFjZHWOYSouEDkQj5IT6LVwpb9lBKWmxrFyOM2'); // Replace with your Fast2SMS API key
