@@ -7,6 +7,7 @@ const API_BASE = 'blog-api.php';
 let currentTags = [];
 let currentEditId = 0;
 let isSourceMode = false;
+let savedLinkRange = null;
 
 // =====================================================
 // INITIALIZATION
@@ -526,8 +527,11 @@ function setupEditor() {
     // Link button
     document.getElementById('btnInsertLink').addEventListener('click', () => {
         const selection = window.getSelection();
-        if (selection.toString()) {
+        if (selection.rangeCount > 0 && selection.toString()) {
+            savedLinkRange = selection.getRangeAt(0).cloneRange();
             document.getElementById('linkText').value = selection.toString();
+        } else {
+            savedLinkRange = null;
         }
         document.getElementById('linkModal').style.display = 'flex';
     });
@@ -573,6 +577,7 @@ function closeLinkModal() {
     document.getElementById('linkModal').style.display = 'none';
     document.getElementById('linkUrl').value = '';
     document.getElementById('linkText').value = '';
+    savedLinkRange = null;
 }
 
 function insertLink() {
@@ -585,7 +590,14 @@ function insertLink() {
     const target = newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
     const html = `<a href="${url}"${target}>${escHtml(text)}</a>`;
     
-    document.getElementById('contentEditor').focus();
+    const editor = document.getElementById('contentEditor');
+    editor.focus();
+    if (savedLinkRange) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedLinkRange);
+        savedLinkRange = null;
+    }
     document.execCommand('insertHTML', false, html);
     closeLinkModal();
 }
