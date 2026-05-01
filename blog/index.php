@@ -71,12 +71,56 @@ if ($conn) {
         $post['content'] = str_replace('[cta]', $inlineCtaHtml, $post['content']);
     }
 
-<<<<<<< Updated upstream
+    // Process [lead-form] shortcode
+    if (strpos($post['content'], '[lead-form]') !== false) {
+        $lfHeadline = 'Get Free Counseling';
+        if (!empty($post['cta_data'])) {
+            $ctaJson = is_string($post['cta_data']) ? json_decode($post['cta_data'], true) : $post['cta_data'];
+            if (!empty($ctaJson['inline_form']['headline'])) {
+                $lfHeadline = $ctaJson['inline_form']['headline'];
+            }
+        }
+        $inlineFormHtml = '<div class="inline-lead-form" id="ilf-' . $post['id'] . '">'
+            . '<h3 class="ilf-headline">' . htmlspecialchars($lfHeadline) . '</h3>'
+            . '<form class="ilf-form" onsubmit="submitInlineLeadForm(event, this, \'blog-api.php?action=submit_inline_lead\')" novalidate>'
+            . '<div class="ilf-row">'
+            . '<input type="text" name="name" placeholder="Your Name *" required class="ilf-input" autocomplete="name">'
+            . '</div>'
+            . '<div class="ilf-row">'
+            . '<input type="email" name="email" placeholder="Email (optional)" class="ilf-input" autocomplete="email">'
+            . '</div>'
+            . '<div class="ilf-row ilf-phone-row">'
+            . '<select name="country_code" class="ilf-cc" aria-label="Country code">'
+            . '<option value="+91" selected>🇮🇳 +91</option>'
+            . '<option value="+1">🇺🇸 +1</option>'
+            . '<option value="+44">🇬🇧 +44</option>'
+            . '<option value="+61">🇦🇺 +61</option>'
+            . '<option value="+971">🇦🇪 +971</option>'
+            . '<option value="+65">🇸🇬 +65</option>'
+            . '<option value="+60">🇲🇾 +60</option>'
+            . '<option value="+27">🇿🇦 +27</option>'
+            . '</select>'
+            . '<input type="tel" name="phone" placeholder="Phone Number *" required class="ilf-input" autocomplete="tel-national">'
+            . '</div>'
+            . '<div class="ilf-row">'
+            . '<select name="course" required class="ilf-input" aria-label="Select course">'
+            . '<option value="" disabled selected>Select Course *</option>'
+            . '<option value="MBA">MBA - Master of Business Administration</option>'
+            . '<option value="BBA">BBA - Bachelor of Business Administration</option>'
+            . '<option value="MCA">MCA - Master of Computer Applications</option>'
+            . '<option value="BCA">BCA - Bachelor of Computer Applications</option>'
+            . '</select>'
+            . '</div>'
+            . '<button type="submit" class="ilf-btn">Submit Enquiry</button>'
+            . '<p class="ilf-msg" aria-live="polite"></p>'
+            . '</form>'
+            . '</div>';
+        $post['content'] = str_replace('[lead-form]', $inlineFormHtml, $post['content']);
+    }
+
     // Strip any inline styles from <th> elements so CSS can control styling
     $post['content'] = preg_replace('/<th(\s[^>]*?)?\s*style="[^"]*"/i', '<th$1', $post['content']);
 
-=======
->>>>>>> Stashed changes
     // Add heading IDs for TOC (after [cta] replacement so CTA content is excluded)
     $post['content'] = addHeadingIds($post['content']);
     $toc = extractHeadings($post['content']);
@@ -619,6 +663,52 @@ $metaDesc = $post ? ($post['meta_description'] ?: $post['excerpt']) : '';
                 btn.innerHTML = '<i class="fas fa-check"></i>';
                 setTimeout(() => { btn.innerHTML = '<i class="fas fa-link"></i>'; }, 2000);
             });
+        }
+
+        // Inline lead form submission
+        async function submitInlineLeadForm(e, form, endpoint) {
+            e.preventDefault();
+            const btn  = form.querySelector('.ilf-btn');
+            const msg  = form.querySelector('.ilf-msg');
+            const name = form.querySelector('[name="name"]').value.trim();
+            const email = form.querySelector('[name="email"]').value.trim();
+            const phone = form.querySelector('[name="phone"]').value.trim();
+            const cc   = form.querySelector('[name="country_code"]').value;
+            const course = form.querySelector('[name="course"]').value;
+
+            msg.textContent = '';
+            msg.style.color = '';
+
+            if (!name || !phone || !course) {
+                msg.textContent = 'Please fill in all required fields.';
+                msg.style.color = '#dc2626';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Submitting…';
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, country_code: cc, course })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    form.innerHTML = '<p class="ilf-success"><i class="fas fa-check-circle"></i> ' + data.message + '</p>';
+                } else {
+                    msg.textContent = data.message || 'Submission failed. Please try again.';
+                    msg.style.color = '#dc2626';
+                    btn.disabled = false;
+                    btn.textContent = 'Submit Enquiry';
+                }
+            } catch (err) {
+                msg.textContent = 'Network error. Please try again.';
+                msg.style.color = '#dc2626';
+                btn.disabled = false;
+                btn.textContent = 'Submit Enquiry';
+            }
         }
     </script>
 </body>

@@ -290,12 +290,16 @@ async function editPost(id) {
         document.getElementById('ctaText').value = cta.text || 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
         document.getElementById('ctaButtonText').value = cta.button_text || 'Apply Now';
         document.getElementById('ctaButtonUrl').value = cta.button_url || '/';
+        // Inline lead form
+        const lfHeadline = (cta.inline_form && cta.inline_form.headline) ? cta.inline_form.headline : 'Get Free Counseling';
+        document.getElementById('leadFormHeadline').value = lfHeadline;
     } else {
         ctaEnabled.checked = true;
         document.getElementById('ctaTitle').value = 'Start Your Journey';
         document.getElementById('ctaText').value = 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
         document.getElementById('ctaButtonText').value = 'Apply Now';
         document.getElementById('ctaButtonUrl').value = '/';
+        document.getElementById('leadFormHeadline').value = 'Get Free Counseling';
     }
     
     // Trigger counters
@@ -366,6 +370,9 @@ function resetPostForm() {
     document.getElementById('ctaText').value = 'Get 75% Scholarship on Online MBA, BBA, BCA, MCA Programs';
     document.getElementById('ctaButtonText').value = 'Apply Now';
     document.getElementById('ctaButtonUrl').value = '/';
+
+    // Reset inline lead form
+    document.getElementById('leadFormHeadline').value = 'Get Free Counseling';
     
     updateCharCounters();
     updateSEOPreview();
@@ -402,6 +409,33 @@ function insertCtaShortcode() {
 function toggleCtaFields(enabled) {
     const fields = document.getElementById('ctaFields');
     if (fields) fields.style.display = enabled ? 'block' : 'none';
+}
+
+function insertLeadFormShortcode() {
+    const editor = document.getElementById('contentEditor');
+    if (!editor) return;
+    editor.focus();
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && editor.contains(selection.getRangeAt(0).commonAncestorContainer)) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const textNode = document.createTextNode('[lead-form]');
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else {
+        editor.focus();
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('insertText', false, '[lead-form]');
+    }
+    editor.dispatchEvent(new Event('input'));
 }
 
 function collectPostData(status) {
@@ -445,7 +479,10 @@ function collectPostData(status) {
             title: document.getElementById('ctaTitle').value.trim(),
             text: document.getElementById('ctaText').value.trim(),
             button_text: document.getElementById('ctaButtonText').value.trim(),
-            button_url: document.getElementById('ctaButtonUrl').value.trim()
+            button_url: document.getElementById('ctaButtonUrl').value.trim(),
+            inline_form: {
+                headline: document.getElementById('leadFormHeadline').value.trim() || 'Get Free Counseling'
+            }
         }
     };
 }
@@ -548,6 +585,9 @@ function setupEditor() {
     
     // FAQ button
     document.getElementById('btnInsertFaq').addEventListener('click', insertFaqBlock);
+
+    // Lead form button
+    document.getElementById('btnInsertLeadForm').addEventListener('click', insertLeadFormShortcode);
     
     // Source code toggle
     document.getElementById('btnSourceCode').addEventListener('click', toggleSourceMode);

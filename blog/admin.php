@@ -281,6 +281,7 @@ $adminUser = $_SESSION[BLOG_ADMIN_SESSION_NAME];
                                     </div>
                                     <div class="toolbar-group">
                                         <button type="button" class="toolbar-btn" id="btnInsertFaq" title="Insert FAQ Block"><i class="fas fa-question-circle"></i></button>
+                                        <button type="button" class="toolbar-btn" id="btnInsertLeadForm" title="Insert Lead Form"><i class="fas fa-file-alt"></i></button>
                                     </div>
                                     <div class="toolbar-group">
                                         <button type="button" class="toolbar-btn" id="btnSourceCode" title="Toggle HTML Source"><i class="fas fa-code"></i></button>
@@ -365,6 +366,21 @@ $adminUser = $_SESSION[BLOG_ADMIN_SESSION_NAME];
                                 <input type="text" id="newTagInput" placeholder="Add tag & press Enter">
                                 <button type="button" onclick="addTag()"><i class="fas fa-plus"></i></button>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Inline Lead Form -->
+                    <div class="editor-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-file-alt"></i> Inline Lead Form</h3>
+                            <span class="card-toggle"><i class="fas fa-chevron-up"></i></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Form Headline</label>
+                                <input type="text" id="leadFormHeadline" placeholder="e.g. Get Free Counseling" value="Get Free Counseling">
+                            </div>
+                            <small style="color:#6b7280;font-size:0.78rem;display:block;margin-top:6px;"><i class="fas fa-info-circle" style="font-size:0.7rem;"></i> Use the <i class="fas fa-file-alt" style="font-size:0.75rem;"></i> button in the editor toolbar to insert the form at cursor. Fixed fields: Name &middot; Email &middot; Phone + Country Code &middot; Course</small>
                         </div>
                     </div>
 

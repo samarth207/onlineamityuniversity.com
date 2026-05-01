@@ -49,6 +49,10 @@ switch ($action) {
         getRecentPosts($conn);
         break;
     
+    case 'submit_inline_lead':
+        submitInlineLead($conn);
+        break;
+    
     // =====================================================
     // ADMIN ENDPOINTS
     // =====================================================
@@ -390,6 +394,67 @@ function getRecentPosts($conn) {
     } catch (PDOException $e) {
         error_log("Blog get recent posts error: " . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'Database error.']);
+    }
+}
+
+function submitInlineLead($conn) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['success' => false, 'message' => 'POST required']);
+        return;
+    }
+    try {
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!is_array($input)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid request']);
+            return;
+        }
+
+        $name   = isset($input['name'])   ? trim(strip_tags($input['name']))   : '';
+        $email  = isset($input['email'])  ? trim(strip_tags($input['email']))  : '';
+        $phone  = isset($input['phone'])  ? trim(strip_tags($input['phone']))  : '';
+        $cc     = isset($input['country_code']) ? trim(strip_tags($input['country_code'])) : '+91';
+        $course = isset($input['course']) ? trim(strip_tags($input['course'])) : 'General';
+
+        $errors = [];
+        if (strlen($name) < 2)  $errors[] = 'Name is required';
+        if (empty($phone) || !preg_match('/^[0-9]{7,15}$/', preg_replace('/[^0-9]/', '', $phone)))
+            $errors[] = 'Valid phone number is required';
+        if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL))
+            $errors[] = 'Invalid email address';
+        $allowed_courses = ['MBA', 'BBA', 'BCA', 'MCA', 'General'];
+        if (!in_array($course, $allowed_courses)) $course = 'General';
+
+        if (!empty($errors)) {
+            echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
+            return;
+        }
+
+        // Combine country code with phone
+        $fullPhone = $cc . preg_replace('/[^0-9]/', '', $phone);
+        $emailStored = !empty($email) ? $email : '';
+
+        $stmt = $conn->prepare("
+            INSERT INTO form_submissions (form_type, course, phone, name, email, submitted_at, ip_address, user_agent)
+            VALUES ('enquire', :course, :phone, :name, :email, NOW(), :ip, :ua)
+        ");
+        $stmt->execute([
+            ':course' => $course,
+            ':phone'  => $fullPhone,
+            ':name'   => $name,
+            ':email'  => $emailStored,
+            ':ip'     => $_SERVER['REMOTE_ADDR'] ?? '',
+            ':ua'     => substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500)
+        ]);
+
+        // Send lead notification SMS if function exists
+        if (function_exists('sendLeadNotification')) {
+            sendLeadNotification($name, $fullPhone, $emailStored, $course, 'enquire');
+        }
+
+        echo json_encode(['success' => true, 'message' => 'Thank you! We will contact you soon.']);
+    } catch (PDOException $e) {
+        error_log("submitInlineLead error: " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Submission failed. Please try again.']);
     }
 }
 
