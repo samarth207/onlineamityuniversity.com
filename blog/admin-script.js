@@ -584,9 +584,11 @@ function setupEditor() {
     });
     
     // FAQ button
+    document.getElementById('btnInsertFaq').addEventListener('mousedown', e => e.preventDefault());
     document.getElementById('btnInsertFaq').addEventListener('click', insertFaqBlock);
 
     // Lead form button
+    document.getElementById('btnInsertLeadForm').addEventListener('mousedown', e => e.preventDefault());
     document.getElementById('btnInsertLeadForm').addEventListener('click', insertLeadFormShortcode);
     
     // Source code toggle

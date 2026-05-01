@@ -489,53 +489,48 @@
 .inline-lead-form {
     background: #f0f4ff;
     border: 1.5px solid #c7d6f7;
-    border-radius: 12px;
-    padding: 28px 32px;
-    margin: 32px 0;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 28px 0;
 }
 
 .ilf-headline {
     color: #0a2e73 !important;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    margin: 0 0 18px;
+    margin: 0 0 12px;
     font-family: 'Montserrat', sans-serif;
     border: none !important;
     padding: 0 !important;
 }
 
-.ilf-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.ilf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    align-items: center;
 }
 
-.ilf-row {
+.ilf-phone-wrap {
     display: flex;
-    gap: 8px;
-}
-
-.ilf-phone-row {
-    display: flex;
-    gap: 8px;
+    gap: 4px;
 }
 
 .ilf-cc {
     flex: 0 0 auto;
-    width: 120px;
-    padding: 10px 8px;
+    width: 72px;
+    padding: 9px 6px;
     border: 1.5px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     background: #fff;
     color: #1e293b;
     cursor: pointer;
 }
 
 .ilf-input {
-    flex: 1;
     width: 100%;
-    padding: 10px 14px;
+    padding: 9px 12px;
     border: 1.5px solid #cbd5e1;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -552,53 +547,52 @@
 }
 
 .ilf-btn {
-    padding: 12px 24px;
+    padding: 9px 18px;
     background: #0a2e73;
     color: #fff;
     border: none;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    align-self: flex-start;
+    transition: background 0.2s;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .ilf-btn:hover {
     background: #1a4db5;
-    transform: translateY(-1px);
 }
 
 .ilf-btn:disabled {
     background: #94a3b8;
     cursor: not-allowed;
-    transform: none;
 }
 
 .ilf-msg {
-    font-size: 0.88rem;
-    margin: 0;
-    min-height: 1.2em;
+    font-size: 0.83rem;
+    margin: 6px 0 0;
+    min-height: 1em;
 }
 
 .ilf-success {
     color: #059669;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
     text-align: center;
-    padding: 12px 0 0;
+    padding: 8px 0 0;
 }
 
 .ilf-success i {
-    margin-right: 6px;
+    margin-right: 5px;
 }
 
 @media (max-width: 600px) {
     .inline-lead-form {
-        padding: 20px 16px;
+        padding: 16px;
     }
-    .ilf-cc {
-        width: 100px;
+    .ilf-grid {
+        grid-template-columns: 1fr;
     }
 }
 
