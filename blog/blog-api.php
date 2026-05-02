@@ -421,7 +421,7 @@ function submitInlineLead($conn) {
             $errors[] = 'Valid phone number is required';
         if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL))
             $errors[] = 'Invalid email address';
-        $allowed_courses = ['MBA', 'BBA', 'BCA', 'MCA', 'General'];
+        $allowed_courses = ['MBA', 'BBA', 'BCA', 'MCA', 'M.Com', 'B.Com', 'MA', 'BA', 'General'];
         if (!in_array($course, $allowed_courses)) $course = 'General';
 
         if (!empty($errors)) {
