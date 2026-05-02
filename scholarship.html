@@ -1037,7 +1037,7 @@
             const submitBtn = form.querySelector('button[type="submit"]');
             
             const isValid = nameInput.value.trim().length >= 2 &&
-                           phoneInput.value.replace(/\D/g, '').length === 10 &&
+                           phoneInput.value.replace(/\D/g, '').length >= 7 &&
                            emailInput.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) &&
                            courseSelect.value !== '' &&
                            checkbox.checked;

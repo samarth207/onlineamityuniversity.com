@@ -1059,7 +1059,8 @@ if (applyForm) {
                 phone: phoneNumberInput.value.trim(),
                 email: emailInput.value.trim(),
                 consent: consentCheckbox.checked,
-                course: course
+                course: course,
+                countryCode: applyForm.querySelector('select:not([name="course"])')?.value || '+91'
             };
             
             // Submit form

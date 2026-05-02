@@ -55,9 +55,61 @@ const countryCodes = [
     { code: '+43', country: 'AT', name: 'Austria' }
 ];
 
+// Per-country expected phone digit counts (local number, excluding country code)
+const phoneDigitCount = {
+    '+91': 10,  // India
+    '+1':  10,  // US / Canada
+    '+44': 10,  // UK
+    '+61':  9,  // Australia
+    '+971': 9,  // UAE
+    '+65':  8,  // Singapore
+    '+86': 11,  // China
+    '+81': 10,  // Japan
+    '+82': 10,  // South Korea
+    '+33':  9,  // France
+    '+39': 10,  // Italy
+    '+34':  9,  // Spain
+    '+7':  10,  // Russia
+    '+55': 11,  // Brazil
+    '+52': 10,  // Mexico
+    '+27':  9,  // South Africa
+    '+966': 9,  // Saudi Arabia
+    '+92': 10,  // Pakistan
+    '+880':10,  // Bangladesh
+    '+94':  9,  // Sri Lanka
+    '+977':10,  // Nepal
+    '+60':  9,  // Malaysia
+    '+62': 10,  // Indonesia
+    '+63': 10,  // Philippines
+    '+66':  9,  // Thailand
+    '+84':  9,  // Vietnam
+    '+64':  9,  // New Zealand
+    '+974': 8,  // Qatar
+    '+968': 8,  // Oman
+    '+965': 8,  // Kuwait
+    '+973': 8,  // Bahrain
+    '+20': 10,  // Egypt
+    '+234':10,  // Nigeria
+    '+254': 9,  // Kenya
+    '+90': 10,  // Turkey
+    '+98': 10,  // Iran
+    '+41':  9,  // Switzerland
+    '+31':  9,  // Netherlands
+    '+46':  9,  // Sweden
+    '+47':  8,  // Norway
+    '+45':  8,  // Denmark
+    '+48':  9,  // Poland
+    '+351': 9,  // Portugal
+    '+30': 10,  // Greece
+    '+353': 9,  // Ireland
+    '+358': 9,  // Finland
+    '+32':  9,  // Belgium
+    '+43': 10,  // Austria
+};
+
 // Populate country code dropdowns
 function populateCountryDropdowns() {
-    const selects = document.querySelectorAll('select[style*="width: 80px"], select[style*="width: 100px"]');
+    const selects = document.querySelectorAll('select[style*="width: 80px"], select[style*="width: 90px"], select[style*="width: 100px"]');
     selects.forEach(select => {
         // Clear existing options
         select.innerHTML = '';
@@ -75,10 +127,13 @@ function populateCountryDropdowns() {
     });
 }
 
-// Validate phone number (7–15 digits, international)
-function validatePhone(phone) {
-    const phoneRegex = /^\d{7,15}$/;
-    return phoneRegex.test(phone.replace(/\s/g, ''));
+// Validate phone number — country-aware when countryCode provided, else 7–15 digits
+function validatePhone(phone, countryCode) {
+    const cleaned = phone.replace(/\s/g, '');
+    if (!/^\d+$/.test(cleaned)) return false;
+    const expected = countryCode && phoneDigitCount[countryCode];
+    if (expected) return cleaned.length === expected;
+    return cleaned.length >= 7 && cleaned.length <= 15;
 }
 
 // Validate email
@@ -121,34 +176,58 @@ function clearError(input) {
 function setupFormValidation(formId) {
     const form = document.getElementById(formId);
     if (!form) return;
-    
-    // Get form elements
-    const phoneInput = form.querySelector('input[type="tel"]');
-    const nameInput = form.querySelector('input[type="text"]');
-    const emailInput = form.querySelector('input[type="email"]');
-    const checkbox = form.querySelector('input[type="checkbox"]');
-    
-    // Real-time validation
+
+    // Get form elements — nameInput must skip readonly fields (e.g. programDisplay)
+    const phoneInput    = form.querySelector('input[type="tel"]');
+    const nameInput     = form.querySelector('input[name="fullName"]') ||
+                          form.querySelector('input[type="text"]:not([readonly])');
+    const emailInput    = form.querySelector('input[type="email"]');
+    const countrySelect = form.querySelector('select[name="countryCode"]') ||
+                          form.querySelector('select:not([name="course"])');
+    const checkbox      = form.querySelector('input[type="checkbox"]');
+
+    // Returns error message string, or null if valid
+    function phoneError(value) {
+        const cc = countrySelect ? countrySelect.value : '+91';
+        if (!validatePhone(value, cc)) {
+            const expected = phoneDigitCount[cc];
+            return expected
+                ? `Please enter a valid ${expected}-digit phone number`
+                : 'Please enter a valid phone number (7–15 digits)';
+        }
+        return null;
+    }
+
+    // Real-time phone validation
     if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            // Allow only numbers
+        phoneInput.addEventListener('input', function() {
             this.value = this.value.replace(/\D/g, '');
-            // Limit to 15 digits (international max)
-            if (this.value.length > 15) {
-                this.value = this.value.slice(0, 15);
-            }
+            const cc = countrySelect ? countrySelect.value : '+91';
+            const maxLen = phoneDigitCount[cc] || 15;
+            if (this.value.length > maxLen) this.value = this.value.slice(0, maxLen);
+
             if (this.value.length > 0) {
-                if (validatePhone(this.value)) {
+                const err = phoneError(this.value);
+                if (!err) {
                     clearError(this);
-                } else if (this.value.length >= 7) {
-                    showError(this, 'Please enter a valid phone number (7–15 digits)');
+                } else if (this.value.length >= (phoneDigitCount[cc] || 7)) {
+                    showError(this, err);
                 }
             } else {
                 clearError(this);
             }
         });
+
+        // Re-validate phone immediately when country code changes
+        if (countrySelect) {
+            countrySelect.addEventListener('change', function() {
+                if (phoneInput.value.length > 0) {
+                    phoneInput.dispatchEvent(new Event('input'));
+                }
+            });
+        }
     }
-    
+
     if (nameInput) {
         nameInput.addEventListener('blur', function() {
             if (this.value.trim()) {
@@ -159,12 +238,9 @@ function setupFormValidation(formId) {
                 }
             }
         });
-        
-        nameInput.addEventListener('input', function() {
-            clearError(this);
-        });
+        nameInput.addEventListener('input', function() { clearError(this); });
     }
-    
+
     if (emailInput) {
         emailInput.addEventListener('blur', function() {
             if (this.value.trim()) {
@@ -175,36 +251,32 @@ function setupFormValidation(formId) {
                 }
             }
         });
-        
-        emailInput.addEventListener('input', function() {
-            clearError(this);
-        });
+        emailInput.addEventListener('input', function() { clearError(this); });
     }
-    
+
     // Form submission validation
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
         let isValid = true;
-        
+
         // Validate phone
-        if (phoneInput && !validatePhone(phoneInput.value)) {
-            showError(phoneInput, 'Please enter a valid phone number (7–15 digits)');
-            isValid = false;
+        if (phoneInput) {
+            const err = phoneError(phoneInput.value);
+            if (err) { showError(phoneInput, err); isValid = false; }
         }
-        
+
         // Validate name
         if (nameInput && !validateName(nameInput.value)) {
             showError(nameInput, 'Please enter a valid name (letters only, minimum 2 characters)');
             isValid = false;
         }
-        
+
         // Validate email
         if (emailInput && !validateEmail(emailInput.value)) {
             showError(emailInput, 'Please enter a valid email address');
             isValid = false;
         }
-        
+
         // Validate checkbox
         if (checkbox && !checkbox.checked) {
             if (window.NotificationSystem) {
@@ -214,10 +286,8 @@ function setupFormValidation(formId) {
             }
             isValid = false;
         }
-        
-        if (isValid) {
-            submitForm(form);
-        }
+
+        if (isValid) submitForm(form);
     });
 }
 
@@ -325,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Populate country dropdowns
     populateCountryDropdowns();
     
-    // Setup validation for modal forms (hero forms are handled by script.js/mba.js with button state management)
-    const formIds = ['applyNowForm', 'enquireNowForm', 'downloadBrochureForm', 'heroApplyForm'];
+    // Setup validation for all forms including popup
+    const formIds = ['applyNowForm', 'enquireNowForm', 'downloadBrochureForm', 'heroApplyForm', 'popup-apply-form', 'apply-form'];
     formIds.forEach(formId => setupFormValidation(formId));
 });
