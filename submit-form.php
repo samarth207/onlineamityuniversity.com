@@ -18,8 +18,8 @@ function sanitizeInput($data) {
 function validatePhone($phone) {
     // Remove all non-numeric characters
     $phone = preg_replace('/[^0-9]/', '', $phone);
-    // Check if it's a valid length (10 digits for India)
-    return strlen($phone) >= 10 && strlen($phone) <= 15;
+    // Accept 7–15 digits to cover international numbers
+    return strlen($phone) >= 7 && strlen($phone) <= 15;
 }
 
 // Function to validate email
@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Extract and sanitize form data
     $formType = isset($input['formType']) ? sanitizeInput($input['formType']) : '';
     $course = isset($input['course']) ? sanitizeInput($input['course']) : 'General';
+    $countryCode = isset($input['countryCode']) ? sanitizeInput($input['countryCode']) : '+91';
     $phone = isset($input['phone']) ? sanitizeInput($input['phone']) : '';
     $name = isset($input['name']) ? sanitizeInput($input['name']) : '';
     $email = isset($input['email']) ? sanitizeInput($input['email']) : '';
@@ -93,14 +94,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     try {
         // Prepare SQL statement
-        $sql = "INSERT INTO form_submissions (form_type, course, phone, name, email, submitted_at) 
-                VALUES (:form_type, :course, :phone, :name, :email, NOW())";
+        $sql = "INSERT INTO form_submissions (form_type, course, country_code, phone, name, email, submitted_at) 
+                VALUES (:form_type, :course, :country_code, :phone, :name, :email, NOW())";
         
         $stmt = $conn->prepare($sql);
         
         // Bind parameters
         $stmt->bindParam(':form_type', $formType);
         $stmt->bindParam(':course', $course);
+        $stmt->bindParam(':country_code', $countryCode);
         $stmt->bindParam(':phone', $phone);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':email', $email);

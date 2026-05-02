@@ -75,9 +75,9 @@ function populateCountryDropdowns() {
     });
 }
 
-// Validate phone number (10 digits)
+// Validate phone number (7–15 digits, international)
 function validatePhone(phone) {
-    const phoneRegex = /^\d{10}$/;
+    const phoneRegex = /^\d{7,15}$/;
     return phoneRegex.test(phone.replace(/\s/g, ''));
 }
 
@@ -133,15 +133,15 @@ function setupFormValidation(formId) {
         phoneInput.addEventListener('input', function(e) {
             // Allow only numbers
             this.value = this.value.replace(/\D/g, '');
-            // Limit to 10 digits
-            if (this.value.length > 10) {
-                this.value = this.value.slice(0, 10);
+            // Limit to 15 digits (international max)
+            if (this.value.length > 15) {
+                this.value = this.value.slice(0, 15);
             }
             if (this.value.length > 0) {
                 if (validatePhone(this.value)) {
                     clearError(this);
-                } else if (this.value.length === 10) {
-                    showError(this, 'Please enter a valid 10-digit phone number');
+                } else if (this.value.length >= 7) {
+                    showError(this, 'Please enter a valid phone number (7–15 digits)');
                 }
             } else {
                 clearError(this);
@@ -189,7 +189,7 @@ function setupFormValidation(formId) {
         
         // Validate phone
         if (phoneInput && !validatePhone(phoneInput.value)) {
-            showError(phoneInput, 'Please enter a valid 10-digit phone number');
+            showError(phoneInput, 'Please enter a valid phone number (7–15 digits)');
             isValid = false;
         }
         
@@ -235,7 +235,9 @@ async function submitForm(form) {
         let nameInput = form.querySelector('input[name="fullName"]') || 
                         form.querySelector('input[type="text"]:not([readonly])');
         const emailInput = form.querySelector('input[type="email"]');
-        const countrySelect = form.querySelector('select');
+        // Prefer explicitly named country select; fall back to any select that is not the course dropdown
+        const countrySelect = form.querySelector('select[name="countryCode"]') ||
+                              form.querySelector('select:not([name="course"])');
         const checkbox = form.querySelector('input[type="checkbox"]');
         
         // Get course/program - check for course dropdown first, then hidden program field, then any select with course values, then page title
@@ -270,6 +272,7 @@ async function submitForm(form) {
             formType: form.id.replace('Form', '').replace('hero', '').replace('Apply', 'apply').replace('Enquire', 'enquire').replace('Brochure', 'brochure').toLowerCase() || 'apply',
             name: nameInput?.value || '',
             phone: phoneInput?.value || '',
+            countryCode: countrySelect?.value || '+91',
             email: emailInput?.value || '',
             consent: checkbox?.checked || false,
             course: course

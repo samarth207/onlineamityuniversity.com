@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `form_submissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `form_type` enum('apply','enquire','brochure') NOT NULL,
   `course` varchar(50) NOT NULL DEFAULT 'General',
+  `country_code` varchar(10) NOT NULL DEFAULT '+91',
   `phone` varchar(20) NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
